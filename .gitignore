@@ -1,0 +1,16 @@
+# ESP-IDF builds of examples/esp/
+build/
+sdkconfig
+sdkconfig.old
+managed_components/
+dependencies.lock
+docs/*.pdf
+test/test_tfluna_proto
+test/esp/test_core
+test/esp/test_vl53l1x
+test/esp/test_tfluna
+test/esp/test_port_esp
+test/stm/test_core
+test/stm/test_vl53l1x
+test/stm/test_tfluna
+test/stm/test_port_stm

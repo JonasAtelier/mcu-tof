@@ -1,0 +1,37 @@
+# Read by ESP-IDF as a component Kconfig, and by both forges' `make menu`
+# (scripts/menu.py) for the TOF_<CHIP> prompts. stm-forge has no Kconfig
+# build step: its build only sees the defconfig lines, as
+# -DCONFIG_TOF_<CHIP>=1 or 0. Every chip is off unless set.
+menuconfig TOF
+    bool "Time-of-flight distance subsystem"
+    default y
+    help
+        The tof core: struct tof_dev, tof_start(), tof_read() and
+        tof_read_blocking() on a clock deadline, the data-ready hook and
+        the tof_* log helpers. Pick the chip drivers you need below; none
+        is built by default, so a chip missing from sdkconfig is off.
+
+if TOF
+
+    config TOF_VL53L1X
+        bool "ST VL53L1X (I2C), up to 4 m"
+        default n
+        help
+            Build the VL53L1X driver: vl53l1x_init() and the vl53l1x_*
+            calls of esp-vl53l1x-tof, and vl53l1x_tof().
+
+    config TOF_TFLUNA
+        bool "Benewake TF-Luna (UART or I2C), up to 8 m"
+        default n
+        help
+            Build the TF-Luna driver: tfluna_init_uart(),
+            tfluna_init_i2c(), the tfluna_* calls and tfluna_tof().
+
+    config TOF_DEBUG
+        bool "tof_dbg() lines"
+        default n
+        help
+            STM32 HAL only: compile tof_dbg() lines in. On ESP-IDF
+            tof_dbg() is ESP_LOGD and the log level decides.
+
+endif # TOF
