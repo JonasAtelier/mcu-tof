@@ -26,19 +26,53 @@ component directory `tof` as well.
 > **Hardware unverified.** Host tests use simulated chips and platform stubs.
 > Nothing here has run on a physical sensor.
 
-[Supported hardware](#supported-hardware) · [Install](#install) ·
+[Supported hardware](#supported-hardware) · [Drivers](#drivers) ·
+[Install](#install) ·
 [Quick start](#quick-start) · [Examples](#examples) ·
 [Documentation](#documentation) · [Tests](#tests) · [License](#license)
 
 ## Supported hardware
 
-| Chip | Interface | Range | Notes |
-|---|---|---|---|
-| **VL53L1X** | I2C, 0x29, up to 400 kHz | 1.3 m short mode, 4 m long, in the dark | budgets 15–500 ms from ST's table; XSHUT for several on one bus |
-| **TF-Luna** | UART 115200 8N1, or I2C 0x10 | 0.2–8 m | **pin 5 picks the interface at power-up**: ground for I2C, open for UART |
+| Chip | Interface | Notes |
+|---|---|---|
+| **VL53L1X** | I2C | ST time-of-flight ranging sensor |
+| **TF-Luna** | UART or I2C | Benewake single-point lidar |
 
 One Kconfig option each, `TOF_VL53L1X` and `TOF_TFLUNA`. Wiring is in the
 [wiring guide](docs/hardware.md).
+
+## Drivers
+
+<details><summary><b>VL53L1X</b> — I2C</summary>
+
+Budgets 15–500 ms from ST's table; XSHUT for several on one bus.
+
+- Interface: I2C, 0x29, up to 400 kHz
+- Range: 1.3 m short mode, 4 m long, in the dark
+- Examples: ESP-IDF [vl53l1x](examples/esp/vl53l1x/) (esp-vl53l1x-tof's) ·
+  STM32 HAL [vl53l1x](examples/stm/vl53l1x/main.c), GPIO1 through EXTI
+- **VL53L1X: no calibration, ROI or thresholds.** ST's offset and crosstalk
+  calibration, a narrower field of view and distance-window interrupts are
+  not offered, as in esp-vl53l1x-tof. Mode, budget and period are.
+- Chip reference: [VL53L1X](docs/chips.md#vl53l1x)
+
+</details>
+
+<details><summary><b>TF-Luna</b> — UART or I2C</summary>
+
+**pin 5 picks the interface at power-up**: ground for I2C, open for UART.
+
+- Interface: UART 115200 8N1, or I2C 0x10
+- Range: 0.2–8 m
+- Examples: ESP-IDF [tfluna_uart](examples/esp/tfluna_uart/),
+  [tfluna_i2c](examples/esp/tfluna_i2c/) · STM32 HAL
+  [tfluna](examples/stm/tfluna/main.c), UART
+- **TF-Luna: the 9-byte/cm and 9-byte/mm frames only.** PIX, the timestamped
+  and device-ID formats, on/off mode and the ultra-low-power mode are not
+  read. Nothing is saved to the module unless `tfluna_save()` is called.
+- Chip reference: [TF-Luna](docs/chips.md#tf-luna)
+
+</details>
 
 ## Install
 
@@ -133,10 +167,7 @@ if (tof_read_blocking(tof, &s, 200) == 0 && s.valid)
 
 ## Examples
 
-| Chip | ESP-IDF | STM32 HAL |
-|---|---|---|
-| VL53L1X | [vl53l1x](examples/esp/vl53l1x/) (esp-vl53l1x-tof's) | [vl53l1x](examples/stm/vl53l1x/main.c), GPIO1 through EXTI |
-| TF-Luna | [tfluna_uart](examples/esp/tfluna_uart/), [tfluna_i2c](examples/esp/tfluna_i2c/) | [tfluna](examples/stm/tfluna/main.c), UART |
+Each driver's examples are listed under [Drivers](#drivers).
 
 ESP-IDF examples locate this library through `EXTRA_COMPONENT_DIRS`, which
 assumes the repository is checked out as `tof`. With ESP-IDF activated:
@@ -151,12 +182,6 @@ STM32 examples are snippets to integrate into your application.
 
 ## Scope and limitations
 
-- **VL53L1X: no calibration, ROI or thresholds.** ST's offset and crosstalk
-  calibration, a narrower field of view and distance-window interrupts are
-  not offered, as in esp-vl53l1x-tof. Mode, budget and period are.
-- **TF-Luna: the 9-byte/cm and 9-byte/mm frames only.** PIX, the timestamped
-  and device-ID formats, on/off mode and the ultra-low-power mode are not
-  read. Nothing is saved to the module unless `tfluna_save()` is called.
 - **No locks.** One thread per device, or your own mutex.
 
 ## Documentation
