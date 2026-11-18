@@ -33,7 +33,8 @@ examples/
   stm/<chip>/               STM32 snippets: vl53l1x, tfluna
 docs/                       the five guides; the PDFs here are gitignored
 assets/                     README diagram (esp-vl53l1x-tof's)
-CMakeLists.txt              ESP-IDF only; stm-forge globs src/**/*.c instead
+CMakeLists.txt              ESP-IDF component; elsewhere a static library for add_subdirectory(); stm-forge globs src/**/*.c instead
+                            the static library's options are Kconfig's bool entries, found by the type line directly under each `config`
 Kconfig                     TOF and TOF_<CHIP>, for ESP-IDF and both forges' menus
 idf_component.yml           ESP-IDF component manifest
 LICENSE, LICENSE-ST         MIT; ST's BSD 3-clause notice for its data
@@ -131,7 +132,8 @@ two frame kinds.
    configure, and only on success set `tof.ops` and `tof.priv`. Check every
    bus transfer; wait with `tof_sleep_ms()` and deadlines on
    `tof_elapsed_ms()`. Work in errno; return `TOF_HANDLE_RET(err)`.
-4. Add `CONFIG_TOF_FOO` to the no-chip checks in `CMakeLists.txt` and
+4. Add `CONFIG_TOF_FOO` to the no-chip checks in `CMakeLists.txt` (its
+   ESP-IDF part; the `add_subdirectory()` part reads `Kconfig`) and
    `src/tof_port_stm.c`, a HAL module `#error` to `src/tof_priv.h` if it
    needs one, its sources to `CMakeLists.txt`, a `config TOF_FOO` to
    `Kconfig`, `# TOF_FOO is not set` to both forges' defconfigs, and its
