@@ -17,6 +17,9 @@ needs a forge; if you build with esp-forge or stm-forge, see
 [With forge](#with-forge). The steps use the VL53L1X; for the TF-Luna,
 change the chip name. The reference follows the guides.
 
+**Arduino is not supported yet.** TODO: make the library usable from
+Arduino (Arduino IDE and PlatformIO).
+
 ## ESP-IDF, step by step
 
 **You need** ESP-IDF 5.2 or newer, with `idf.py` working in your terminal, and
