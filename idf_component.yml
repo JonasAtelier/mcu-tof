@@ -1,6 +1,6 @@
 version: "0.1.0"
 description: mcu-tof time-of-flight distance subsystem for ESP-IDF and STM32 HAL, with the ST VL53L1X (I2C) and Benewake TF-Luna (UART or I2C) drivers.
-license: MIT AND BSD-3-Clause
+license: GPL-3.0-only AND BSD-3-Clause
 dependencies:
   idf:
     version: ">=5.2"

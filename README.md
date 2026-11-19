@@ -50,7 +50,7 @@ To run the simulated tests on your computer, run `make -C test test` from the li
 
 ## License
 
-[MIT](LICENSE), except the VL53L1X register addresses and configuration
+© 2026 JonasAtelier, [GPL-3.0-only](LICENSE), except the VL53L1X register addresses and configuration
 tables in `src/vl53l1x/vl53l1x_regs.h`, which are ST's, from its ultra lite
 driver (STSW-IMG009) 3.4.0, under the BSD 3-clause licence: ST's notice is
 kept in that file and in [LICENSE-ST](LICENSE-ST). Firmware shipped in
